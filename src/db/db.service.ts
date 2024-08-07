@@ -33,8 +33,28 @@ export class DbService {
         }
       )
     });
+    
+    return players.map((player) => new PlayerStatsModel(player));
+  }
 
-    console.log();
+  async getStatsForWeek(weekId: number): Promise<PlayerStatsModel[]> {
+    const players: any[] = await new Promise((resolve, reject) => {
+      this.connection.query(`
+        SELECT teams.name as teamName, savesTier2, lastName, savesTier1, subs, motms, points, redCards, concedes, assists, shotsTier1, shotsTier2, players.id, starts, goals, tacklesTier1, tacklesTier2, ownGoals, cleansheets, penSaves, firstName, penMisses, passesTier1, position, passesTier2, yellowCards 
+        FROM weekPlayers
+        LEFT JOIN players
+        ON weekPlayers.playerId = players.id
+        LEFT JOIN teams
+        ON players.teamId = teams.id
+        WHERE weekPlayers.weekId = ${weekId};
+      `,
+        [],
+        (err, res) => {
+          if (err) reject(err);
+          else resolve(res as any[]);
+        }
+      )
+    });
     
     return players.map((player) => new PlayerStatsModel(player));
   }

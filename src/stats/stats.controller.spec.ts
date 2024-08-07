@@ -52,9 +52,9 @@ describe('StatsController', () => {
   });
 
   describe('getStatsForPeriod', () => {
-    it('for week argument should return week stats', () => {
-      jest.spyOn(statsService, 'getStatsForWeek').mockReturnValue('Week!');
-      expect(statsController.getStatsForPeriod({period: PeriodEnum.Week}, {weekId: 1})).toBe('Week!');
+    it('for week argument should return week stats', async () => {
+      jest.spyOn(statsService, 'getStatsForWeek').mockResolvedValue({period: PeriodEnum.Week, stats: STATS});
+      expect(await statsController.getStatsForPeriod({period: PeriodEnum.Week}, {weekId: 1})).toStrictEqual({period: PeriodEnum.Week, stats: STATS});
       expect(statsService.getStatsForWeek).toHaveBeenCalledTimes(1);
       expect(statsService.getStatsForWeek).toHaveBeenCalledWith(1);
     });

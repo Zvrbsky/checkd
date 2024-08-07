@@ -3,6 +3,7 @@ import { StatsService } from './stats.service';
 import { PeriodEnum } from './enum/period.enum';
 import { DbService } from '../db/db.service';
 import { createMock } from '@golevelup/ts-jest';
+import { BadRequestException } from '@nestjs/common';
 
 const STATS = [
   {
@@ -59,6 +60,22 @@ describe('StatsService', () => {
         stats: STATS
       });
       expect(dbService.getStatsForSeason).toHaveBeenCalledTimes(1);
+    });
+  })
+
+  describe('getStatsForWeek', () => {
+    it('should return stats from db', async () => {
+      jest.spyOn(dbService, 'getStatsForWeek').mockResolvedValue(STATS);
+      expect(await statsService.getStatsForWeek(1)).toStrictEqual({
+        period: PeriodEnum.Week,
+        stats: STATS
+      });
+      expect(dbService.getStatsForWeek).toHaveBeenCalledTimes(1);
+      expect(dbService.getStatsForWeek).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw if not weekId provided', async () => {
+      await expect(statsService.getStatsForWeek()).rejects.toThrow(BadRequestException);
     });
   })
 });

@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StatsService } from './stats.service';
 import { PeriodDto } from './dto/period.dto';
 import { PeriodEnum } from './enum/period.enum';
@@ -13,6 +13,7 @@ export class StatsController {
 
   @Get('stats/:period')
   @ApiOkResponse()
+  @ApiBadRequestResponse()
   getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): string | Promise<StatsDto> {
     switch (params.period) {
       case PeriodEnum.Week:
