@@ -14,5 +14,15 @@ services:
     volumes:
       - my-db:/var/lib/mysql
       - ${PWD}/data/Dump20201103.sql:/docker-entrypoint-initdb.d/start.sql
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
 volumes:
   my-db:
