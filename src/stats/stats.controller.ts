@@ -12,7 +12,7 @@ export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
   @Get('stats/:period')
-  @ApiOkResponse()
+  @ApiOkResponse({type: StatsDto})
   @ApiBadRequestResponse()
   getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): Promise<StatsDto> {
     switch (params.period) {
