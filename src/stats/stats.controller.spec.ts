@@ -2,18 +2,52 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StatsController } from './stats.controller';
 import { StatsService } from './stats.service';
 import { PeriodEnum } from './enum/period.enum';
+import { createMock } from '@golevelup/ts-jest';
+
+const STATS = [
+  {
+    "teamName": "Arsenal",
+    "savesTier2": 0,
+    "lastName": "Macey",
+    "savesTier1": 0,
+    "subs": 0,
+    "motms": 0,
+    "points": 0,
+    "redCards": 0,
+    "concedes": 0,
+    "assists": 0,
+    "shotsTier1": 0,
+    "shotsTier2": 0,
+    "id": 2,
+    "starts": 0,
+    "goals": 0,
+    "tacklesTier1": 0,
+    "tacklesTier2": 0,
+    "ownGoals": 0,
+    "cleansheets": 0,
+    "penSaves": 0,
+    "firstName": "Matt",
+    "penMisses": 0,
+    "passesTier1": 0,
+    "position": "GK",
+    "passesTier2": 0,
+    "yellowCards": 0
+  }
+];
 
 describe('StatsController', () => {
   let statsController: StatsController;
-  let statsService: StatsService;
+  const statsService = createMock<StatsService>()
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [StatsController],
       providers: [StatsService],
-    }).compile();
+    })
+    .overrideProvider(StatsService)
+    .useValue(statsService)
+    .compile();
 
-    statsService = moduleRef.get<StatsService>(StatsService);
     statsController = moduleRef.get<StatsController>(StatsController);
   });
 
@@ -32,9 +66,9 @@ describe('StatsController', () => {
       expect(statsService.getStatsForMonth).toHaveBeenCalledWith(1);
     });
 
-    it('for season argument should return season stats', () => {
-      jest.spyOn(statsService, 'getStatsForSeason').mockReturnValue('Season!');
-      expect(statsController.getStatsForPeriod({period: PeriodEnum.Season}, {})).toBe('Season!');
+    it('for season argument should return season stats', async () => {
+      jest.spyOn(statsService, 'getStatsForSeason').mockResolvedValue({period: PeriodEnum.Season, stats: STATS});
+      expect(await statsController.getStatsForPeriod({period: PeriodEnum.Season}, {})).toStrictEqual({period: PeriodEnum.Season, stats: STATS});
       expect(statsService.getStatsForSeason).toHaveBeenCalledTimes(1);
     });
   })

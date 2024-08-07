@@ -4,6 +4,7 @@ import { StatsService } from './stats.service';
 import { PeriodDto } from './dto/period.dto';
 import { PeriodEnum } from './enum/period.enum';
 import { PeriodDetailsDto } from './dto/period-details.dto';
+import { StatsDto } from './dto/stats.dto';
 
 @ApiTags('stats')
 @Controller()
@@ -12,7 +13,7 @@ export class StatsController {
 
   @Get('stats/:period')
   @ApiOkResponse()
-  getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): string {
+  getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): string | Promise<StatsDto> {
     switch (params.period) {
       case PeriodEnum.Week:
         return this.statsService.getStatsForWeek(query.weekId)
