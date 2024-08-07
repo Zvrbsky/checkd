@@ -78,4 +78,20 @@ describe('StatsService', () => {
       await expect(statsService.getStatsForWeek()).rejects.toThrow(BadRequestException);
     });
   })
+
+  describe('getStatsForMonth', () => {
+    it('should return stats from db', async () => {
+      jest.spyOn(dbService, 'getStatsForMonth').mockResolvedValue(STATS);
+      expect(await statsService.getStatsForMonth(1)).toStrictEqual({
+        period: PeriodEnum.Month,
+        stats: STATS
+      });
+      expect(dbService.getStatsForMonth).toHaveBeenCalledTimes(1);
+      expect(dbService.getStatsForMonth).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw if not weekId provided', async () => {
+      await expect(statsService.getStatsForMonth()).rejects.toThrow(BadRequestException);
+    });
+  })
 });

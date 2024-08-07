@@ -16,8 +16,14 @@ export class StatsService {
       stats: await this.dbService.getStatsForWeek(weekId)
     };
   }
-  getStatsForMonth(monthId: number): string {
-    return 'Month!';
+  async getStatsForMonth(monthId?: number): Promise<StatsDto> {
+    if (monthId === undefined) {
+      throw new BadRequestException('monthId not provided for week stats request');
+    }
+    return {
+      period: PeriodEnum.Week,
+      stats: await this.dbService.getStatsForMonth(monthId)
+    };
   }
   async getStatsForSeason(): Promise<StatsDto> {
     return {

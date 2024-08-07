@@ -14,7 +14,7 @@ export class StatsController {
   @Get('stats/:period')
   @ApiOkResponse()
   @ApiBadRequestResponse()
-  getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): string | Promise<StatsDto> {
+  getStatsForPeriod(@Param() params: PeriodDto, @Query() query: PeriodDetailsDto): Promise<StatsDto> {
     switch (params.period) {
       case PeriodEnum.Week:
         return this.statsService.getStatsForWeek(query.weekId)

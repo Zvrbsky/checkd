@@ -59,9 +59,9 @@ describe('StatsController', () => {
       expect(statsService.getStatsForWeek).toHaveBeenCalledWith(1);
     });
 
-    it('for month argument should return month stats', () => {
-      jest.spyOn(statsService, 'getStatsForMonth').mockReturnValue('Month!');
-      expect(statsController.getStatsForPeriod({period: PeriodEnum.Month}, {monthId: 1})).toBe('Month!');
+    it('for month argument should return month stats', async () => {
+      jest.spyOn(statsService, 'getStatsForMonth').mockResolvedValue({period: PeriodEnum.Month, stats: STATS});
+      expect(await statsController.getStatsForPeriod({period: PeriodEnum.Month}, {monthId: 1})).toStrictEqual({period: PeriodEnum.Month, stats: STATS});
       expect(statsService.getStatsForMonth).toHaveBeenCalledTimes(1);
       expect(statsService.getStatsForMonth).toHaveBeenCalledWith(1);
     });
