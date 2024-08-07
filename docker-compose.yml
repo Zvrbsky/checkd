@@ -3,7 +3,7 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
+      MYSQL_DATABASE: 'practical'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
@@ -13,5 +13,6 @@ services:
       - '3306'
     volumes:
       - my-db:/var/lib/mysql
+      - ${PWD}/data/Dump20201103.sql:/docker-entrypoint-initdb.d/start.sql
 volumes:
   my-db:
